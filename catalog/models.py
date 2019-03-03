@@ -14,8 +14,8 @@ class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.ForeignKey('Author', on_delete=models.SET_NULL, null=True)
     summary = models.CharField(max_length=1000, help_text='Enter a brief description of the book')
-    isbn = models.CharField('ISBN', max_length=13, help_text='13 character<a href="https://www.isbn-international.org'
-                                                             '/content/what-isbn"> ISBN number')
+    isbn = models.CharField('ISBN', max_length=13, help_text='13 Character <a href="https://www.isbn-international'
+                                                             '.org/content/what-isbn">ISBN number</a>')
     genre = models.ManyToManyField(Genre, help_text="Select a genre for this book")
 
     def __str__(self):
@@ -23,6 +23,11 @@ class Book(models.Model):
 
     def get_absolute_url(self):
         return reverse('book-detail', args=[str(self.id)])
+
+    def display_genre(self):
+        return ', '.join(genre.name for genre in self.genre.all()[:3])
+
+    display_genre.short_description = 'Genre'
 
 
 class BookInstance(models.Model):
@@ -34,7 +39,7 @@ class BookInstance(models.Model):
 
     LOAN_STATUS = (
         ('m', 'Maintenance'),
-        ('o', "On Loan"),
+        ('o', 'On loan'),
         ('a', 'Available'),
         ('r', 'Reserved'),
     )
@@ -44,7 +49,7 @@ class BookInstance(models.Model):
         choices=LOAN_STATUS,
         blank=True,
         default='m',
-        help_text="Book availability",
+        help_text='Book availability',
     )
 
     class Meta:
